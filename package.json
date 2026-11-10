@@ -1,0 +1,11 @@
+{
+  "name": "bakir-khata",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node -e \"import('http').then(({default:http})=>Promise.all([import('fs'),import('path')]).then(([{default:fs},{default:path}])=>{const mime={'.html':'text/html;charset=utf-8','.css':'text/css;charset=utf-8','.js':'application/javascript;charset=utf-8','.json':'application/json;charset=utf-8','.png':'image/png','.jpg':'image/jpeg','.svg':'image/svg+xml'};http.createServer((req,res)=>{const u=decodeURIComponent((req.url||'/').split('?')[0]);const rel=u==='/'?'index.html':u.replace(/^\\/+/,'');const p=path.resolve('.',rel);if(!p.startsWith(path.resolve('.'))||!fs.existsSync(p)||fs.statSync(p).isDirectory()){res.writeHead(404);return res.end('Not Found');}res.writeHead(200,{'Content-Type':mime[path.extname(p)]||'application/octet-stream'});fs.createReadStream(p).pipe(res);}).listen(3000,'0.0.0.0',()=>console.log('Static server running on http://0.0.0.0:3000'));}))\"",
+    "build": "node -e \"import('fs').then(({default:fs})=>{fs.rmSync('dist',{recursive:true,force:true});fs.mkdirSync('dist',{recursive:true});for(const f of ['index.html','style.css','app.js','firebase-applet-config.json'])if(fs.existsSync(f))fs.copyFileSync(f,'dist/'+f);console.log('Static build complete in dist/');})\"",
+    "lint": "node --check app.js"
+  }
+}
